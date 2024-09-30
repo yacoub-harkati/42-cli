@@ -24,39 +24,59 @@ def d_i_w_f_i(img_p, t_w):
     md, sz, dt = img.mode, img.size, img.tobytes()
     srf = p.image.fromstring(dt, sz, md)
     b_i()
-    t_wd, r, idle, last_mouse_pos, idle_time, idle_limit = "", True, False, p.mouse.get_pos(), 0, 5
+    t_wd, r, idle = "", True, False
+    last_mouse_pos = p.mouse.get_pos()
+    last_activity_time = t.time()
+    idle_limit = 10
     while r:
         mouse_pos = p.mouse.get_pos()
+        current_time = t.time()
+
         if mouse_pos != last_mouse_pos:
-            idle, idle_time = False, 0
+            idle = False
+            last_activity_time = current_time
         else:
-            idle_time += p.time.get_ticks() / 1000.0
+            if current_time - last_activity_time >= idle_limit:
+                idle = True
+
         last_mouse_pos = mouse_pos
-        if idle_time >= idle_limit:
-            idle = True
+
         if idle:
             sc.fill((0, 0, 0))
         else:
             sc.blit(srf, (0, 0))
+
         p.display.update()
+
         for ev in p.event.get():
             if ev.type == p.QUIT:
                 p.quit()
                 s.exit()
+
             if ev.type == p.KEYDOWN:
                 ch = ev.unicode
                 if ch.isalnum():
                     t_wd += ch
-                if ev.key == p.K_RETURN and t_wd == t_w:
-                    u_i()
-                    r = False
+
+                # Respond immediately when the Enter key is pressed and the word matches
+                if ev.key == p.K_RETURN:
+                    if t_wd == t_w:
+                        u_i()
+                        r = False  # Immediately stop the loop
+                        break  # Break out of the event loop
+
                 if ev.key == p.K_BACKSPACE:
                     t_wd = t_wd[:-1]
+
                 if ev.key == p.K_ESCAPE:
                     t_wd = ""
+
             if ev.type == p.MOUSEMOTION:
-                idle, idle_time = False, 0
-        t.sleep(0.1)
+                idle = False
+                last_activity_time = current_time
+
+        t.sleep(0.05)  # Shorten sleep time to make the loop more responsive
+
     p.quit()
 
 if __name__ == "__main__":
