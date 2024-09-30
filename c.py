@@ -1,5 +1,4 @@
-import pygame as p, Quartz as q, sys as s, time as t
-from PIL import Image as i
+import pygame as p, Quartz as q, sys as s, time as t, subprocess as sp
 
 def b_i():
     et = q.CGEventTapCreate(q.kCGSessionEventTap, q.kCGHeadInsertEventTap, q.kCGEventTapOptionDefault, q.kCGEventMaskForAllEvents, lambda pr, t, e, rc: None, None)
@@ -11,6 +10,10 @@ def b_i():
 
 def u_i():
     q.CGDisplayShowCursor(q.CGMainDisplayID())
+
+def k_s_a():
+    sp.Popen(["caffeinate", "-d", "-i", "-m", "-u", "-t", "28000", ";", "pmset", "displaysleepnow"])
+    sp.Popen(["osascript", "-e", 'tell application "System Events" to set value of slider 1 of group 1 of tab group 1 of window 1 of application process "System Preferences" to 0.1'])
 
 def d_i_w_f_i(img_p, t_w):
     p.init()
@@ -58,12 +61,11 @@ def d_i_w_f_i(img_p, t_w):
                 if ch.isalnum():
                     t_wd += ch
 
-                # Respond immediately when the Enter key is pressed and the word matches
                 if ev.key == p.K_RETURN:
                     if t_wd == t_w:
                         u_i()
-                        r = False  # Immediately stop the loop
-                        break  # Break out of the event loop
+                        r = False
+                        break
 
                 if ev.key == p.K_BACKSPACE:
                     t_wd = t_wd[:-1]
@@ -75,10 +77,11 @@ def d_i_w_f_i(img_p, t_w):
                 idle = False
                 last_activity_time = current_time
 
-        t.sleep(0.05)  # Shorten sleep time to make the loop more responsive
+        t.sleep(0.05)
 
     p.quit()
 
 if __name__ == "__main__":
+    k_s_a()
     i_p, u_w = 'l.png', '282480'
     d_i_w_f_i(i_p, u_w)
