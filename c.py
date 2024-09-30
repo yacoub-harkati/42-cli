@@ -13,7 +13,6 @@ def u_i():
 
 def k_s_a():
     sp.Popen(["caffeinate", "-d", "-i", "-m", "-u", "-t", "28000", ";", "pmset", "displaysleepnow"])
-    sp.Popen(["osascript", "-e", 'tell application "System Events" to set value of slider 1 of group 1 of tab group 1 of window 1 of application process "System Preferences" to 0.1'])
 
 def d_i_w_f_i(img_p, t_w):
     p.init()
