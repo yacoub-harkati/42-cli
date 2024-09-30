@@ -1,4 +1,4 @@
-import pygame as p, Quartz as q, sys as s
+import pygame as p, Quartz as q, sys as s, time as t
 from PIL import Image as i
 
 def b_i():
@@ -23,10 +23,9 @@ def d_i_w_f_i(img_p, t_w):
     sc_w, sc_h = sc_info.current_w, sc_info.current_h
     sc = p.display.set_mode((sc_w, sc_h), p.FULLSCREEN)
     p.display.set_caption('L')
-    
-    # Load the image using PIL, resize to screen size, and convert to pygame format
+
     img = i.open(img_p)
-    img = img.resize((sc_w, sc_h), i.LANCZOS)  # Resize the image to the screen size
+    img = img.resize((sc_w, sc_h), i.LANCZOS)
     img = img.convert("RGB")
     md = img.mode
     sz = img.size
@@ -36,24 +35,54 @@ def d_i_w_f_i(img_p, t_w):
     b_i()
     t_wd = ""
     r = True
+    idle = False
+    last_mouse_pos = p.mouse.get_pos()
+    idle_time = 0
+
     while r:
-        sc.fill((0, 0, 0))
-        sc.blit(srf, (0, 0))
+        mouse_pos = p.mouse.get_pos()
+        if mouse_pos != last_mouse_pos:
+            idle = False
+        else:
+            idle_time += p.time.get_ticks() / 1000.0
+
+        last_mouse_pos = mouse_pos
+
+        if idle_time >= idle_limit:
+            idle = True
+
+        if idle:
+        else:
+
         p.display.update()
+
         for ev in p.event.get():
             if ev.type == p.QUIT:
                 p.quit()
                 s.exit()
+
             if ev.type == p.KEYDOWN:
                 ch = ev.unicode
                 if ch.isalnum():
                     t_wd += ch
+
                 if ev.key == p.K_RETURN:
                     if t_wd == t_w:
                         u_i()
                         r = False
+
                 if ev.key == p.K_BACKSPACE:
                     t_wd = t_wd[:-1]
+
+                if ev.key == p.K_ESCAPE:
+                    t_wd = ""
+
+            if ev.type == p.MOUSEMOTION:
+                idle = False
+                idle_time = 0
+
+        t.sleep(0.1)
+
     p.quit()
 
 if __name__ == "__main__":
