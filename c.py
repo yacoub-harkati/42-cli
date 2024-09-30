@@ -1,4 +1,5 @@
 import pygame as p, Quartz as q, sys as s, time as t, subprocess as sp
+from PIL import Image
 
 def b_i():
     et = q.CGEventTapCreate(q.kCGSessionEventTap, q.kCGHeadInsertEventTap, q.kCGEventTapOptionDefault, q.kCGEventMaskForAllEvents, lambda pr, t, e, rc: None, None)
@@ -20,16 +21,20 @@ def d_i_w_f_i(img_p, t_w):
     sc_w, sc_h = sc_info.current_w, sc_info.current_h
     sc = p.display.set_mode((sc_w, sc_h), p.FULLSCREEN)
     p.display.set_caption('L')
-    img = i.open(img_p)
-    img = img.resize((sc_w, sc_h), i.LANCZOS)
+    
+    img = Image.open(img_p)
+    img = img.resize((sc_w, sc_h), Image.LANCZOS)
     img = img.convert("RGB")
+    
     md, sz, dt = img.mode, img.size, img.tobytes()
     srf = p.image.fromstring(dt, sz, md)
+    
     b_i()
     t_wd, r, idle = "", True, False
     last_mouse_pos = p.mouse.get_pos()
     last_activity_time = t.time()
     idle_limit = 10
+    
     while r:
         mouse_pos = p.mouse.get_pos()
         current_time = t.time()
