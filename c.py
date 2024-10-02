@@ -12,9 +12,6 @@ def b_i():
 def u_i():
     q.CGDisplayShowCursor(q.CGMainDisplayID())
 
-def k_s_a():
-    sp.Popen(["caffeinate", "-d", "-i", "-m", "-u", "-t", "28000", ";", "pmset", "displaysleepnow"])
-
 def d_i_w_f_i(img_p, t_w):
     p.init()
     sc_info = p.display.Info()
@@ -86,6 +83,5 @@ def d_i_w_f_i(img_p, t_w):
     p.quit()
 
 if __name__ == "__main__":
-    k_s_a()
     i_p, u_w = 'l.png', '282480'
     d_i_w_f_i(i_p, u_w)
